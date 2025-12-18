@@ -36,7 +36,7 @@ function App() {
 
         <Route
           path="/change-password"
-          element={<Layout><ChangePassword /></Layout>}
+          element={<ChangePassword />}
         />
 
         <Route

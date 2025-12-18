@@ -30,8 +30,9 @@
 }
 
 .header-text h1 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 14px;
   color: #111827;
 }
 
@@ -73,7 +74,7 @@
 }
 
 .header-image {
-  width: 180px;
+  width: 250px;
   height: 120px;
   border-radius: 16px;
   overflow: hidden;
@@ -475,4 +476,15 @@
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
+}
+/* ==============================
+   HIDE IMAGES ON MOBILE VIEW
+============================== */
+@media (max-width: 768px) {
+
+  /* Hide all images */
+  img {
+    display: none !important;
+  }
+
 }

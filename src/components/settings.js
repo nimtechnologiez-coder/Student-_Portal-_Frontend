@@ -11,34 +11,26 @@ const Settings = () => {
   const [batch, setBatch] = useState("");
   const [mobile, setMobile] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("light"); // ✅ editable
 
   // ==========================
-  // FETCH PROFILE
+  // FETCH PROFILE (VIEW ONLY)
   // ==========================
   useEffect(() => {
-    if (!userId) {
-      console.warn("❌ user_id not found in localStorage");
-      return;
-    }
+    if (!userId) return;
 
     fetch(`http://127.0.0.1:8000/api/student_settings_api/?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("✅ FULL API RESPONSE:", data);
-        console.log("👉 PROFILE OBJECT:", data?.profile);
-        console.log("📱 MOBILE VALUE:", data?.profile?.mobile);
-
         if (data.status === "success" && data.profile) {
           setFullName(data.profile.name || "");
           setEmail(data.profile.email || "");
           setCourse(data.profile.course || "");
           setBatch(data.profile.batch || "");
-          setMobile(String(data.profile.mobile || "")); // 🔑 KEY LINE
+          setMobile(String(data.profile.mobile || ""));
           setProfilePhoto(data.profile.profile_photo || "");
         }
-      })
-      .catch((err) => console.error("❌ Profile API error:", err));
+      });
   }, [userId]);
 
   const handleLogout = () => {
@@ -48,7 +40,7 @@ const Settings = () => {
 
   return (
     <div className="settings-container settings-page">
-      {/* HEADER SECTION */}
+      {/* HEADER */}
       <div className="settings-section">
         <div className="settings-content">
           <div className="settings-text">
@@ -81,7 +73,7 @@ const Settings = () => {
         </div>
       </div>
 
-      {/* PROFILE SECTION */}
+      {/* PROFILE */}
       <div className="profile-settings-box">
         <div className="profile-top">
           <img
@@ -111,23 +103,22 @@ const Settings = () => {
             <input type="email" value={email} readOnly />
           </div>
 
+          {/* ✅ ONLY THEME IS EDITABLE */}
           <div className="form-group">
             <label>Theme</label>
-            <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+            <select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+            >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
           </div>
 
-          {/* ✅ MOBILE NUMBER */}
+          {/* ❌ MOBILE – VIEW ONLY */}
           <div className="form-group">
             <label>Mobile Number</label>
-            <input
-              type="text"
-              value={mobile}
-              placeholder="Enter mobile number"
-              onChange={(e) => setMobile(e.target.value)}
-            />
+            <input type="text" value={mobile} readOnly />
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../style/Login.css";
 import { useNavigate } from "react-router-dom";
+import login from "../Images/login.png"
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,14 +36,17 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/student/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: formData.email,
-          password: formData.password,
-        }),
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/student/login/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: formData.email,
+            password: formData.password,
+          }),
+        }
+      );
 
       const result = await response.json();
       setLoading(false);
@@ -53,30 +57,28 @@ const Login = () => {
         localStorage.setItem("student_name", result.name);
         localStorage.setItem("student_email", result.email);
 
-        console.log("Login saved user_id:", result.user_id);
-
         setShowModal(true);
       } else {
-        setErrors(result.message);
+        setErrors(result.message || "Invalid credentials");
       }
-    } catch (err) {
+    } catch (error) {
       setLoading(false);
       setErrors("Server Error. Try again later.");
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-header">
-          <h2>NIM Academy</h2>
-          <p>Student Login</p>
-        </div>
+    <div className="page-bg">
+      <div className="main-card">
 
-        {errors && <div className="login-error">{errors}</div>}
+        {/* LEFT SECTION */}
+        <div className="left-section">
+          <h2>Login</h2>
+          <p className="subtext">Enter your account details</p>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
+          {errors && <div className="login-error">{errors}</div>}
+
+          <form onSubmit={handleSubmit}>
             <label>Email / Username</label>
             <input
               type="text"
@@ -85,9 +87,7 @@ const Login = () => {
               onChange={handleChange}
               placeholder="Enter your email or username"
             />
-          </div>
 
-          <div className="form-group">
             <label>Password</label>
             <input
               type="password"
@@ -96,12 +96,36 @@ const Login = () => {
               onChange={handleChange}
               placeholder="Enter your password"
             />
-          </div>
 
-          <button className="login-btn" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            <a href="/change-password" className="forgot">
+              Forgot Password?
+            </a>
+
+            <button className="login-btn" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+        </div>
+
+        {/* RIGHT SECTION */}
+        <div className="right-section">
+          <div className="blur-circle circle1"></div>
+          <div className="blur-circle circle2"></div>
+
+          <h1>
+            Welcome to <br />
+            <span>student portal</span>
+          </h1>
+
+          <p className="access">Login to access your account</p>
+
+          <img
+            src={login}
+            alt="illustratio"
+            className="illustration"
+          />
+        </div>
+
       </div>
 
       {/* SUCCESS MODAL */}
@@ -109,7 +133,7 @@ const Login = () => {
         <div className="modal-overlay">
           <div className="modal-box">
             <h3>Login Successful 🎉</h3>
-            <p>Welcome to NIM Academy Student Portal</p>
+            <p>Welcome to Student Portal</p>
 
             <button
               className="modal-btn"
