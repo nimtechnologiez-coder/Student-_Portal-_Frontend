@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../style/Login.css";
 import { useNavigate } from "react-router-dom";
-import login from "../Images/login.png"
+import login from "../Images/login.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -52,18 +52,26 @@ const Login = () => {
       setLoading(false);
 
       if (result.status === "success") {
-        // ✅ SAVE USER DATA
         localStorage.setItem("user_id", result.user_id);
         localStorage.setItem("student_name", result.name);
         localStorage.setItem("student_email", result.email);
+        localStorage.setItem("valid_upto", result.valid_upto);
 
         setShowModal(true);
-      } else {
+      }
+
+      
+      else if (result.status === "expired") {
+        setErrors(result.message);
+      }
+
+      
+      else {
         setErrors(result.message || "Invalid credentials");
       }
     } catch (error) {
       setLoading(false);
-      setErrors("Server Error. Try again later.");
+      setErrors("Server error. Try again later.");
     }
   };
 
@@ -71,7 +79,7 @@ const Login = () => {
     <div className="page-bg">
       <div className="main-card">
 
-        {/* LEFT SECTION */}
+        {/* LEFT */}
         <div className="left-section">
           <h2>Login</h2>
           <p className="subtext">Enter your account details</p>
@@ -107,7 +115,7 @@ const Login = () => {
           </form>
         </div>
 
-        {/* RIGHT SECTION */}
+        {/* RIGHT */}
         <div className="right-section">
           <div className="blur-circle circle1"></div>
           <div className="blur-circle circle2"></div>
@@ -119,11 +127,7 @@ const Login = () => {
 
           <p className="access">Login to access your account</p>
 
-          <img
-            src={login}
-            alt="illustratio"
-            className="illustration"
-          />
+          <img src={login} alt="illustration" className="illustration" />
         </div>
 
       </div>
