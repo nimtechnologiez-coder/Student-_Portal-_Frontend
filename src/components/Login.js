@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../style/Login.css";
 import { useNavigate } from "react-router-dom";
 import login from "../Images/login.png";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 const Login = () => {
   const navigate = useNavigate();
