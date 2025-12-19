@@ -276,7 +276,7 @@
   font-weight: 500;
   transition: 0.3s ease;
 }
-
+ 
 .forgot:hover {
   color: #5548ee;
   text-decoration: underline;
@@ -294,7 +294,7 @@
   justify-content: center !important;
   z-index: 99999 !important;
 }
-
+ 
 /* ===============================
    MODAL BOX (FORCE APPLY)
 ================================ */
@@ -313,7 +313,7 @@
   color: #fff !important;
   box-shadow: 0 45px 90px rgba(0, 0, 0, 0.65) !important;
 }
-
+ 
 /* ===============================
    MODAL TEXT
 ================================ */
@@ -321,13 +321,13 @@
   font-size: 26px !important;
   margin-bottom: 12px !important;
 }
-
+ 
 .modal-overlay .modal-box p {
   font-size: 14px !important;
   margin-bottom: 34px !important;
   opacity: 0.9 !important;
 }
-
+ 
 /* ===============================
    MODAL BUTTON
 ================================ */
@@ -342,3 +342,5 @@
   font-weight: 600 !important;
   cursor: pointer !important;
 }
+ 
+ 
