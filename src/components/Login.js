@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../style/Login.css";
 import { useNavigate } from "react-router-dom";
 import login from "../Images/login.png";
- 
+
 const Login = () => {
   const navigate = useNavigate();
  
@@ -37,7 +37,7 @@ const Login = () => {
  
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/student/login/",
+        `${API_BASE_URL}/api/student/login/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
