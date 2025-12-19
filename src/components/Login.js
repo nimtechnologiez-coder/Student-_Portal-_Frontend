@@ -3,6 +3,8 @@ import "../style/Login.css";
 import { useNavigate } from "react-router-dom";
 import login from "../Images/login.png";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import API_BASE_URL from "../config/api";
+
 
 
 const Login = () => {
