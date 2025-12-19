@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../style/ChangePassword.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -18,44 +19,44 @@ const ForgotPassword = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChangePassword = async () => {
-    setError("");
+  setError("");
 
-    if (!username || !oldPassword || !newPassword || !confirmPassword) {
-      setError("All fields are required!");
-      return;
-    }
+  if (!username || !oldPassword || !newPassword || !confirmPassword) {
+    setError("All fields are required!");
+    return;
+  }
 
-    if (newPassword !== confirmPassword) {
-      setError("New password and confirm password do not match!");
-      return;
-    }
+  if (newPassword !== confirmPassword) {
+    setError("New password and confirm password do not match!");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/student/change-password/",
-        {
-          username,
-          old_password: oldPassword,
-          new_password: newPassword,
-          confirm_password: confirmPassword,
-        }
-      );
-
-      const data = response.data;
-      setLoading(false);
-
-      if (data.status === "success") {
-        setShowSuccess(true); // ⭐ Show modal
-      } else {
-        setError(data.message);
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/student/change-password/`,
+      {
+        username,
+        old_password: oldPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword,
       }
-    } catch (err) {
-      setLoading(false);
-      setError("Server error! Try again later.");
+    );
+
+    const data = response.data;
+    setLoading(false);
+
+    if (data.status === "success") {
+      setShowSuccess(true);
+    } else {
+      setError(data.message);
     }
-  };
+  } catch (err) {
+    setLoading(false);
+    setError("Server error! Try again later.");
+  }
+};
 
   return (
     <>

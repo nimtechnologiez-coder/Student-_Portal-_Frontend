@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../style/StudentTaskLog.css";
 import headerImg from "../Images/hero1top 1.png";
+import API_BASE_URL from "../config/api";
+
 
 const StudentTaskLog = () => {
   const userId = localStorage.getItem("user_id");
@@ -13,7 +15,7 @@ const StudentTaskLog = () => {
   const [uploading, setUploading] = useState(false);
 
   const loadData = () => {
-    fetch(`http://127.0.0.1:8000/api/student/task-log/?user_id=${userId}`)
+    fetch(`${API_BASE_URL}/api/student/task-log/?user_id=${userId}`)
       .then((res) => res.json())
       .then((json) => {
         if (json.status === "success") setData(json);
@@ -46,7 +48,7 @@ const StudentTaskLog = () => {
 
     setUploading(true);
 
-    fetch("http://127.0.0.1:8000/api/student/task-log/", {
+    fetch(`${API_BASE_URL}/api/student/task-log/`, {
       method: "POST",
       body: formData,
     })

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../style/course.css";
 import course from "../Images/coursepic 1.png"
+import API_BASE_URL from "../config/api";
+
 
 const Courses = () => {
   const userId = localStorage.getItem("user_id");
@@ -16,20 +18,22 @@ const Courses = () => {
   // LOAD DATA
   // ==========================
   const loadData = (filter = "") => {
-    setLoading(true);
+  setLoading(true);
 
-    fetch(
-      `http://127.0.0.1:8000/api/student/course-progress/?user_id=${userId}${filter}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setCourseInfo(data);
-          setTopics(data.topics || []);
-        }
-      })
-      .finally(() => setLoading(false));
-  };
+  fetch(
+    `${API_BASE_URL}/api/student/course-progress/?user_id=${userId}${filter}`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status === "success") {
+        setCourseInfo(data);
+        setTopics(data.topics || []);
+      }
+    })
+    .catch(() => console.error("Course progress API error"))
+    .finally(() => setLoading(false));
+};
+
 
   useEffect(() => {
     if (userId) loadData();

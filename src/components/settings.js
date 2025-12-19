@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "../style/settings.css";
 import coursepic from "../Images/hero1top 1.png";
+import API_BASE_URL from "../config/api";
+
 
 const Settings = () => {
   const userId = localStorage.getItem("user_id");
@@ -19,7 +21,7 @@ const Settings = () => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`http://127.0.0.1:8000/api/student_settings_api/?user_id=${userId}`)
+    fetch(`${API_BASE_URL}/api/student/settings/?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success" && data.profile) {
