@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../style/StudentDashboard.css";
 import herotop from "../Images/image.jpg";
+import API_BASE_URL from "../config/api";
+
 
 const Dashboard = () => {
   const userId = localStorage.getItem("user_id");
@@ -17,7 +19,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`http://127.0.0.1:8000/api/student/dashboard/?user_id=${userId}`)
+    fetch(`${API_BASE_URL}/api/student/dashboard/?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
