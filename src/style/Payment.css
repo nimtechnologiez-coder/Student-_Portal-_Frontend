@@ -1,312 +1,387 @@
-/* ================= GLOBAL ================= */
+/* =================================================
+   GLOBAL
+================================================= */
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
   font-family: "Poppins", sans-serif;
 }
- 
- 
-  :root[data-theme="light"] {
-          --bg-primary: #ffffff;
-          --bg-secondary: #f8f9fa;
-          --bg-card: linear-gradient(135deg, #E2A9FF 0%, #F7EFFB 100%);
-          --text-primary: #2d2d2d;
-          --text-secondary: #666666;
-          --border-color: #e0b7ff;
-          --input-bg: #ffffff;
-          --input-border: #d794f8;
-          --shadow: rgba(207, 144, 238, 0.2);
-        }
- 
-        :root[data-theme="dark"] {
-          --bg-primary: #1a1a2e;
-          --bg-secondary: #16213e;
-          --bg-card: linear-gradient(135deg, #6b2fb5 0%, #3d1f5c 100%);
-          --text-primary: #ffffff;
-          --text-secondary: #b8b8b8;
-          --border-color: #6b2fb5;
-          --input-bg: #2d2d44;
-          --input-border: #6b2fb5;
-          --shadow: rgba(107, 47, 181, 0.3);
-        }
- 
- 
- 
-          /* THEME TOGGLE STYLES */
-        .theme-toggle-wrapper {
-          display: flex;
-          gap: 12px;
-        }
- 
-        .theme-option {
-          flex: 1;
-          padding: 12px 16px;
-          border: 2px solid var(--input-border);
-          border-radius: 12px;
-          background: var(--input-bg);
-          color: var(--text-primary);
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          text-align: center;
-        }
- 
-        .theme-option:hover {
-          border-color: #9b3cff;
-        }
- 
-        .theme-option.active {
-          background: linear-gradient(135deg, #9b3cff 0%, #c77dff 100%);
-          color: white;
-          border-color: #9b3cff;
-        }
-       
-.settingsa-container {
- margin-top: 60px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
+body {
+  margin: 0;
+  background: #faf7ff;
 }
- 
-/* Header Section */
-.settingsa-section {
-  background: white;
-  border-radius: 24px;
-  padding: 32px;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 1px #CF90EE;
-  border: 2px solid #f3e8ff;
-}
- 
-.settingsa-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 24px;
-}
- 
-.settingsa-text h1 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #111827;
-}
-.settingsa-text span {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #CE71FC;
-}
- 
-.settingsa-text p {
-  font-size: 14px;
-  color: #6b7280;
-}
- 
-.settingsa-info {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
- 
-.infosa-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
- 
-.infosa-item {
-  display: flex;
-  gap: 12px;
-  font-size: 14px;
-}
- 
-.infosa-label {
-  color: #6b7280;
-  min-width: 60px;
-}
- 
-.infosa-value {
-  color: #111827;
-  font-weight: 500;
-}
- 
-.settingsa-image {
-  width: 180px;
-  height: 120px;
-  border-radius: 16px;
-  overflow: hidden;
-}
- 
-.settingsa-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
- 
- 
- 
- 
- 
- 
- 
- 
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 30px;
-  background: linear-gradient(135deg, #c084fc, #a855f7);
-  border-radius: 20px;
-  margin: 20px;
-  color: #fff;
-}
- 
-.topbar h3 {
-  font-size: 22px;
-  font-weight: 600;
-}
- 
-.topbar p {
-  font-size: 14px;
-  opacity: 0.9;
-}
- 
-.info {
-  display: flex;
-  gap: 20px;
-}
- 
-.info span {
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 8px 14px;
-  border-radius: 20px;
-}
- 
-/* ================= PAGE BACKGROUND ================= */
-.payment-wrapper {
-  padding: 20px 20px;
-  min-height: 100vh;
- 
-}
- 
+
+/* =================================================
+   PAGE TITLE
+================================================= */
 .payment-title {
   text-align: center;
-  font-size: 34px;
-  font-weight: 700;
-  color: #c084fc;
-  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #b57cff;
+  margin: 25px 0;
 }
- 
-/* ================= CONTAINER ================= */
+
+/* =================================================
+   MAIN WRAPPER
+================================================= */
+.payment-wrapper {
+  padding: 20px;
+}
+
 .payment-container {
   max-width: 1200px;
   margin: auto;
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.4fr 1fr;
   gap: 30px;
 }
- 
-/* ================= LEFT FORM ================= */
-.left-side {
-  background: #fff;
-  padding: 30px;
-  border-radius: 20px;
-  border: 2px solid #e9d5ff;
-}
- 
+
+/* =================================================
+   LEFT SIDE FORM
+================================================= */
 .payment-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 18px;
+  border: 1px solid #e6d7ff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
- 
+
+.payment-form h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* INPUTS */
 .payment-form label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #9333ea;
+  display: block;
+  font-size: 14px;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  color: #8a4dff;
 }
- 
+
 .payment-form input,
 .payment-form textarea {
+  width: 100%;
   padding: 12px 14px;
-  border: 2px solid #e9d5ff;
   border-radius: 10px;
+  border: 1px solid #dccbff;
+  background: #f2eaff;
   font-size: 14px;
-}
- 
-.payment-form input:focus,
-.payment-form textarea:focus {
   outline: none;
-  border-color: #c084fc;
 }
- 
+
+.payment-form input:disabled {
+  background: #edf3ff;
+}
+
 .payment-form textarea {
-  min-height: 80px;
   resize: none;
+  min-height: 90px;
 }
- 
-/* ================= WALLETS ================= */
+
+/* =================================================
+   BANK DETAILS
+================================================= */
+.bank-details {
+  margin: 18px 0 10px;
+  font-size: 14px;
+  color: #000;
+}
+
+.bank-details strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* =================================================
+   WALLETS
+================================================= */
 .wallets {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin: 10px 0;
-}
- 
-.wallets span {
-  color: #a855f7;
+  margin: 15px 0;
+  text-align: center;
   font-weight: 600;
-  cursor: pointer;
+  color: #a466ff;
 }
- 
-/* ================= PAY BUTTON ================= */
-.pay-btn {
-  margin-top: 10px;
-  align-self: flex-end;
-  padding: 12px 45px;
-  background: #c084fc;
-  border: none;
-  border-radius: 25px;
-  font-size: 16px;
-  font-weight: 600;
+
+/* =================================================
+   BUTTONS
+================================================= */
+.pay-btn,
+.scan-btn,
+.submit-btn {
+  background: linear-gradient(135deg, #b57cff, #8b5cf6);
   color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 26px;
+  font-size: 14px;
   cursor: pointer;
+  margin-top: 18px;
+  transition: 0.3s;
 }
- 
-.pay-btn:hover {
-  background: #a855f7;
+
+.pay-btn:hover,
+.scan-btn:hover,
+.submit-btn:hover {
+  opacity: 0.9;
 }
- 
-/* ================= RIGHT SIDE ================= */
+
+.pay-btn,
+.submit-btn {
+  width: 100%;
+}
+
+/* =================================================
+   STATUS
+================================================= */
+.status-box {
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  background: #ffe4e4;
+  color: #b71c1c;
+}
+
+/* =================================================
+   RIGHT SIDE AMOUNTS
+================================================= */
 .right-side {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
- 
+
 .amount-box {
-  background: #c084fc;
-  color: #fff;
-  padding: 30px;
-  border-radius: 25px;
+  background: linear-gradient(135deg, #c084fc, #a855f7);
+  padding: 26px;
+  border-radius: 22px;
+  color: white;
+  box-shadow: 0 10px 28px rgba(168, 85, 247, 0.4);
 }
- 
+
 .amount-box h3 {
-  font-size: 18px;
-  font-weight: 500;
+  margin: 0;
+  font-size: 15px;
+  opacity: 0.9;
 }
- 
-.rupee {
-  font-size: 44px;
+
+.amount-box .rupee {
+  font-size: 32px;
   font-weight: 700;
   margin-top: 10px;
 }
- 
-/* ================= QR POPUP ================= */
+
+/* =================================================
+   QR POPUP
+================================================= */
+.qr-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.qr-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 18px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.qr-box img {
+  width: 220px;
+  margin: 20px auto;
+}
+
+.qr-back-btn {
+  margin-top: 10px;
+  background: #ddd;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* =================================================
+   RESPONSIVE BREAKPOINTS
+================================================= */
+
+/* TABLET */
+@media (max-width: 992px) {
+  .payment-container {
+    grid-template-columns: 1fr;
+  }
+
+  .right-side {
+    flex-direction: row;
+  }
+
+  .amount-box {
+    flex: 1;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .payment-title {
+    font-size: 26px;
+  }
+
+  .payment-form {
+    padding: 22px;
+  }
+
+  .right-side {
+    flex-direction: column;
+  }
+
+  .amount-box .rupee {
+    font-size: 26px;
+  }
+
+  .scan-btn {
+    width: 100%;
+  }
+}
+/* =================================================
+   TOP BAR (PROFILE HEADER)
+================================================= */
+.settingsa-container {
+  width: 100%;
+  background: linear-gradient(135deg, #ede9fe, #faf7ff);
+  padding: 25px 20px;
+}
+
+.settingsa-section {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.settingsa-content {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= LEFT TEXT ================= */
+.settingsa-text h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.settingsa-text h1 span {
+  color: #8b5cf6;
+}
+
+.settingsa-text p {
+  margin-top: 6px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* ================= INFO + IMAGE ================= */
+.settingsa-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+/* ================= INFO GRID ================= */
+.infosa-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.infosa-item {
+  background: #f4ecff;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.infosa-label {
+  display: block;
+  font-size: 12px;
+  color: #7c3aed;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.infossa-value,
+.infosa-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* ================= IMAGE ================= */
+.settingsa-image img {
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+}
+
+/* =================================================
+   RESPONSIVE BREAKPOINTS
+================================================= */
+
+/* TABLET */
+@media (max-width: 992px) {
+  .settingsa-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .infosa-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .settingsa-image img {
+    max-width: 160px;
+    margin-top: 10px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .settingsa-content {
+    padding: 20px;
+  }
+
+  .settingsa-text h1 {
+    font-size: 22px;
+  }
+
+  .settingsa-text p {
+    font-size: 13px;
+  }
+
+  .infosa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settingsa-image img {
+    max-width: 140px;
+    margin: 10px auto 0;
+    display: block;
+  }
+}
+/* =========================
+   QR OVERLAY BACKGROUND
+   ========================= */
 .qr-overlay {
   position: fixed;
   inset: 0;
@@ -316,382 +391,82 @@
   justify-content: center;
   z-index: 9999;
 }
- 
+
+/* =========================
+   QR MODAL BOX
+   ========================= */
 .qr-box {
-  background: #fff;
-  padding: 35px;
-  border-radius: 25px;
+  background: #ffffff;
+  padding: 25px 30px;
+  width: 320px;
+  border-radius: 14px;
   text-align: center;
-  width: 90%;
-  max-width: 400px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  animation: qrFadeIn 0.25s ease-in-out;
 }
- 
-.qr-title {
-  font-size: 26px;
-  color: #9333ea;
+
+/* =========================
+   TITLE
+   ========================= */
+.qr-box h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
 }
- 
-.qr-image {
+
+/* =========================
+   QR IMAGE
+   ========================= */
+.qr-box img {
   width: 220px;
   height: 220px;
-  margin: 20px 0;
+  object-fit: contain;
+  margin-bottom: 18px;
 }
- 
-.qr-text {
-  font-size: 16px;
-  color: #555;
-}
- 
-.qr-back-btn {
-  margin-top: 10px;
-  padding: 10px 35px;
-  background: #c084fc;
+
+/* =========================
+   CLOSE BUTTON
+   ========================= */
+.qr-box button {
+  background: #009688;
   color: #fff;
   border: none;
-  border-radius: 25px;
-  font-size: 15px;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
 }
- 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 1024px) {
-  .payment-container {
-    grid-template-columns: 1fr;
+
+.qr-box button:hover {
+  background: #00796b;
+}
+
+/* =========================
+   ANIMATION
+   ========================= */
+@keyframes qrFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
- 
-  .right-side {
-    flex-direction: row;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
- 
-@media (max-width: 768px) {
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
- 
-  .info {
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-  }
- 
-  .right-side {
-    flex-direction: column;
-  }
- 
-  .pay-btn {
-    width: 100%;
-    align-self: center;
-  }
-}
- 
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
 @media (max-width: 480px) {
-  .payment-title {
-    font-size: 26px;
+  .qr-box {
+    width: 90%;
+    padding: 20px;
   }
- 
-  .rupee {
-    font-size: 34px;
-  }
- 
-  .qr-image {
+
+  .qr-box img {
     width: 180px;
     height: 180px;
   }
 }
- 
- 
- 
- 
- 
-/* ================= RESPONSIVE ================= */
- 
-/* Large desktops */
-@media (max-width: 1440px) {
-  .payment-container {
-    gap: 25px;
-  }
- 
-  .left-side,
-  .right-side {
-    padding: 25px;
-  }
- 
-  .payment-title {
-    font-size: 32px;
-  }
-}
- 
-/* Tablets / Laptops */
-@media (max-width: 1024px) {
-  .payment-container {
-    grid-template-columns: 1fr;
-  }
- 
-  .right-side {
-    flex-direction: row;
-    justify-content: space-between;
-  }
- 
-  .amount-box {
-    flex: 1;
-    text-align: center;
-  }
-}
- 
-/* Small tablets / large phones */
-@media (max-width: 768px) {
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
- 
-  .info {
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-  }
- 
-  .right-side {
-    flex-direction: column;
-  }
- 
-  .pay-btn {
-    width: 100%;
-    align-self: center;
-  }
- 
-  .payment-form input,
-  .payment-form textarea {
-    font-size: 13px;
-  }
- 
-  .payment-title {
-    font-size: 28px;
-  }
- 
-  .rupee {
-    font-size: 40px;
-  }
- 
-  .qr-box {
-    padding: 25px;
-  }
- 
-  .qr-image {
-    width: 200px;
-    height: 200px;
-  }
-}
- 
-/* Mobile Phones */
-/* Mobile responsive for the shown layout */
-@media (max-width: 480px) {
-  /* Container should have padding and center content */
-  .settingsa-container {
-    padding: 15px;
-  }
- 
-  /* Stack content vertically */
-  .settingsa-content {
-    flex-direction: column;
-    gap: 20px;
-  }
- 
-  /* Text block takes full width */
-  .settingsa-text {
-    width: 100%;
-  }
- 
-  /* Increase size of greeting */
-  .settingsa-text h1 {
-    font-size: 22px;
-  }
- 
-  .settingsa-text span {
-    font-size: 24px;
-    font-weight: 700;
-  }
- 
-  .settingsa-text p {
-    font-size: 14px;
-    margin-top: 6px;
-  }
- 
-  /* Info section stacked vertically and full width */
-  .settingsa-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    width: 100%;
-  }
- 
-  /* Each info label and value inline but with smaller spacing */
-  .infosa-item {
-    font-size: 13px;
-    gap: 6px;
-  }
- 
-  .infosa-label {
-    min-width: 70px;
-    color: #6b7280;
-  }
- 
-  .infosa-value {
-    font-weight: 600;
-    word-break: break-word;
-  }
- 
-  /* Image resized and centered */
-  .settingsa-image {
-    width: 100%;
-    max-width: 250px;
-    height: auto;
-    margin: 0 auto;
-    border-radius: 16px;
-  }
- 
-  .settingsa-image img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
- 
-  /* Payment title centered and smaller */
-  .payment-title {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
- 
-  /* Payment form container full width */
-  .payment-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
- 
-  .left-side {
-    padding: 20px;
-  }
- 
-  /* Inputs full width and bigger font */
-  .payment-form input,
-  .payment-form textarea {
-    width: 100%;
-    font-size: 16px;
-    padding: 14px;
-  }
- 
-  .payment-form label {
-    font-size: 14px;
-  }
- 
-  /* Wallets section adjust spacing */
-  .wallets {
-    justify-content: center;
-    gap: 10px;
-  }
- 
-  .wallets span {
-    font-size: 14px;
-  }
- 
-  /* Pay button full width */
-  .pay-btn {
-    width: 100%;
-    padding: 14px 0;
-    font-size: 18px;
-  }
- 
-  /* Amount boxes stacked vertically */
-  .right-side {
-    flex-direction: column;
-    gap: 15px;
-  }
- 
-  .amount-box {
-    padding: 20px;
-    font-size: 16px;
-    text-align: center;
-  }
- 
-  .amount-box h3 {
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
- 
-  .rupee {
-    font-size: 28px;
-    font-weight: 700;
-  }
- 
-  /* QR Popup scaling */
-  .qr-box {
-    width: 90%;
-    padding: 25px;
-  }
- 
-  .qr-title {
-    font-size: 22px;
-  }
- 
-  .qr-image {
-    width: 160px;
-    height: 160px;
-  }
- 
-  .qr-text {
-    font-size: 14px;
-  }
- 
-  .qr-back-btn {
-    padding: 10px 30px;
-    font-size: 16px;
-  }
-}
- 
-/* Extra Small Phones / Portrait mode */
-@media (max-width: 360px) {
-  .payment-title {
-    font-size: 22px;
-  }
- 
-  .rupee {
-    font-size: 28px;
-  }
- 
-  .topbar h3 {
-    font-size: 18px;
-  }
- 
-  .topbar p {
-    font-size: 12px;
-  }
- 
-  .payment-form label {
-    font-size: 11px;
-  }
- 
-  .pay-btn {
-    padding: 8px 20px;
-    font-size: 14px;
-  }
- 
-  .wallets span {
-    font-size: 12px;
-  }
- 
-  .qr-title {
-    font-size: 22px;
-  }
- 
-  .qr-text {
-    font-size: 14px;
-  }
-}
- 
- 

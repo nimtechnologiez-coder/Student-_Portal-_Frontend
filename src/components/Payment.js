@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../style/Payment.css";
 import qrImage from "../Images/qr-code.png";
 import coursepic from "../Images/hero1top 1.png";
- 
-/* ---------------- TOP BAR ---------------- */
+
+/* ================= TOP BAR ================= */
 const TopBar = ({ fullName, email, course }) => {
   return (
     <div className="settingsa-container">
@@ -15,25 +15,25 @@ const TopBar = ({ fullName, email, course }) => {
             </h1>
             <p>Check Your Daily Task & schedules</p>
           </div>
- 
+
           <div className="settingsa-info">
             <div className="infosa-grid">
               <div className="infosa-item">
                 <span className="infosa-label">Email</span>
                 <span className="infossa-value">{email}</span>
               </div>
- 
+
               <div className="infosa-item">
                 <span className="infosa-label">Course</span>
                 <span className="infosa-value">{course}</span>
               </div>
- 
+
               <div className="infosa-item">
                 <span className="infosa-label">Batch</span>
                 <span className="infosa-value">Batch A1 (Morning)</span>
               </div>
             </div>
- 
+
             <div className="settingsa-image">
               <img src={coursepic} alt="Students" />
             </div>
@@ -43,158 +43,260 @@ const TopBar = ({ fullName, email, course }) => {
     </div>
   );
 };
- 
-/* ---------------- QR POPUP ---------------- */
-const QrPopup = ({ show, onClose, qrImage }) => {
-  if (!show) return null;
- 
-  return (
-    <div className="qr-overlay" onClick={onClose}>
-      <div className="qr-box" onClick={(e) => e.stopPropagation()}>
-        <h1 className="qr-title">Payment</h1>
-        <img src={qrImage} alt="QR Code" className="qr-image" />
-        <p className="qr-text">Scan the Code 🔍</p>
-        <button className="qr-back-btn" onClick={onClose}>
-          Back
-        </button>
-      </div>
-    </div>
-  );
-};
- 
-/* ---------------- PAYMENT FORM ---------------- */
-const PaymentForm = () => {
+
+/* ================= PAYMENT FORM ================= */
+const PaymentForm = ({
+  fullName,
+  dueAmount,
+  refreshAmounts,
+  paymentInfo,
+}) => {
   const [showQR, setShowQR] = useState(false);
- 
+  const [loading, setLoading] = useState(false);
+
+  const userId = localStorage.getItem("user_id");
+
   const [formData, setFormData] = useState({
-    fullName: "",
-    street: "",
-    city: "",
-    state: "",
-    country: "",
-    pinCode: "",
-    address: "",
     userAmount: "",
+    utr: "",
+    screenshot: null,
   });
- 
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
   };
- 
-  const handlePay = (e) => {
-    e.preventDefault();
- 
-    if (!formData.userAmount || formData.userAmount <= 0) {
-      alert("Please enter a valid amount");
+
+  const submitPayment = async () => {
+    if (!formData.userAmount || !formData.utr || !formData.screenshot) {
+      alert("All fields required");
       return;
     }
- 
-    setShowQR(true);
+
+    if (Number(formData.userAmount) > Number(dueAmount)) {
+      alert("Amount cannot exceed due amount");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("user_id", userId);
+    data.append("amount", formData.userAmount);
+    data.append("utr", formData.utr);
+    data.append("screenshot", formData.screenshot);
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(
+        "http://localhost:8000/api/submit-payment/",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const json = await res.json();
+
+      if (res.ok && json.status === "success") {
+        alert("Payment proof submitted");
+        setFormData({ userAmount: "", utr: "", screenshot: null });
+        refreshAmounts();
+        setShowQR(false);
+      } else {
+        alert(json.message || "Payment failed");
+      }
+    } catch {
+      alert("Server error");
+    } finally {
+      setLoading(false);
+    }
   };
- 
+
   return (
     <>
-      <form className="payment-form" onSubmit={handlePay}>
+      <div className="payment-form">
         <h1 className="title">Payment</h1>
- 
+
         <label>Full Name</label>
-        <input name="fullName" value={formData.fullName} onChange={handleChange} required />
- 
-        <label>Street Address</label>
-        <input name="street" value={formData.street} onChange={handleChange} required />
- 
-        <label>City</label>
-        <input name="city" value={formData.city} onChange={handleChange} required />
- 
-        <label>State</label>
-        <input name="state" value={formData.state} onChange={handleChange} required />
- 
-        <label>Country</label>
-        <input name="country" value={formData.country} onChange={handleChange} required />
- 
-        <label>Pin Code</label>
-        <input name="pinCode" value={formData.pinCode} onChange={handleChange} required />
- 
+        <input value={fullName} disabled />
+
         <label>Amount</label>
         <input
           type="number"
           name="userAmount"
+          max={dueAmount}
+          placeholder={`Max ₹${dueAmount}`}
           value={formData.userAmount}
           onChange={handleChange}
-          placeholder="Enter Amount"
-          required
         />
- 
-        <label>Address</label>
-        <textarea name="address" value={formData.address} onChange={handleChange} required />
- 
-        <div className="wallets">
-          <span>Paytm</span>
-          <span>GPay</span>
-          <span>PhonePe</span>
+
+        <div className="bank-details">
+          <strong>ABC Training Institute</strong>
+          <p>UPI: abctraining@upi</p>
+          <p>Account: 123456789012</p>
+          <p>Bank: State Bank of India</p>
+          <p>IFSC: SBIN0001234</p>
         </div>
- 
-        <button className="pay-btn" type="submit">
-          Pay
+
+        <div className="wallets">Paytm &nbsp; GPay &nbsp; PhonePe</div>
+
+        <button className="scan-btn" onClick={() => setShowQR(true)}>
+          Scan QR
         </button>
-      </form>
- 
-      <QrPopup show={showQR} onClose={() => setShowQR(false)} qrImage={qrImage} />
+
+        <label>UTR / Transaction ID</label>
+        <input
+          name="utr"
+          value={formData.utr}
+          onChange={handleChange}
+        />
+
+        <label>Payment Screenshot</label>
+        <input type="file" name="screenshot" onChange={handleChange} />
+
+        <button
+          className="submit-btn"
+          onClick={submitPayment}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit Payment Proof"}
+        </button>
+
+        {/* ================= STATUS + REASON ================= */}
+        <div className="status-box">
+          Status:{" "}
+          <b>
+            {paymentInfo.status === "approved" && "Approved ✅"}
+            {paymentInfo.status === "pending" && "Waiting for Admin Approval ⏳"}
+            {paymentInfo.status === "rejected" && "Rejected ❌"}
+          </b>
+
+          {paymentInfo.status === "rejected" &&
+            paymentInfo.remark && (
+              <div
+                style={{
+                  marginTop: "6px",
+                  color: "#f44336",
+                  fontSize: "14px",
+                }}
+              >
+                Reason: {paymentInfo.remark}
+              </div>
+            )}
+        </div>
+      </div>
+
+      {showQR && (
+        <div className="qr-overlay" onClick={() => setShowQR(false)}>
+          <div className="qr-box" onClick={(e) => e.stopPropagation()}>
+            <h2>Scan QR</h2>
+            <img src={qrImage} alt="QR" />
+            <button onClick={() => setShowQR(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
- 
-/* ---------------- MAIN PAGE ---------------- */
+
+/* ================= MAIN PAGE ================= */
 const PaymentPage = () => {
-  const [amountData, setAmountData] = useState({
-    due_amount: 0,
-    total_amount: 0,
+  const userId = localStorage.getItem("user_id");
+
+  const [userData, setUserData] = useState({
+    fullName: "",
+    email: "",
+    course: "",
   });
- 
-  // Mock user data (later connect API)
-  const userData = {
-    fullName: "Alsha Jhon",
-    email: "john@example.com",
-    course: "Python Full Stack",
-  };
- 
+
+  const [amountData, setAmountData] = useState({
+    total_amount: 0,
+    paid_amount: 0,
+    due_amount: 0,
+  });
+
+  const [paymentInfo, setPaymentInfo] = useState({
+    status: "",
+    remark: "",
+  });
+
+  /* 🔹 FETCH PROFILE */
   useEffect(() => {
-    fetch("http://localhost:8000/api/payment-amount/")
+    fetch(
+      `http://localhost:8000/api/student/profile/?user_id=${userId}`
+    )
       .then((res) => res.json())
-      .then((data) =>
-        setAmountData({
-          due_amount: data.due_amount || 0,
-          total_amount: data.total_amount || 0,
-        })
-      )
-      .catch(() => console.log("Amount fetch error"));
-  }, []);
- 
+      .then((data) => {
+        if (data.status === "success") {
+          setUserData({
+            fullName: data.profile.name,
+            email: data.profile.email,
+            course: data.profile.course,
+          });
+        }
+      });
+  }, [userId]);
+
+  /* 🔹 FETCH PAYMENT DATA */
+  const fetchAmounts = () => {
+    fetch(
+      `http://localhost:8000/api/payment-amount/?user_id=${userId}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setAmountData({
+            total_amount: data.total_amount,
+            paid_amount: data.paid_amount,
+            due_amount: data.due_amount,
+          });
+
+          setPaymentInfo({
+            status: data.payment_status,
+            remark: data.admin_remark,
+          });
+        }
+      });
+  };
+
+  useEffect(() => {
+    fetchAmounts();
+  }, [userId]);
+
   return (
     <>
-      <TopBar
-        fullName={userData.fullName}
-        email={userData.email}
-        course={userData.course}
-      />
- 
+      <TopBar {...userData} />
+
       <div className="payment-wrapper">
         <h1 className="payment-title">Payment</h1>
- 
+
         <div className="payment-container">
           <div className="left-side">
-            <PaymentForm />
+            <PaymentForm
+              fullName={userData.fullName}
+              dueAmount={amountData.due_amount}
+              refreshAmounts={fetchAmounts}
+              paymentInfo={paymentInfo}
+            />
           </div>
- 
+
           <div className="right-side">
-            <div className="amount-box">
-              <h3>Due Amount</h3>
-              <p className="rupee">₹{amountData.due_amount}</p>
-            </div>
- 
             <div className="amount-box">
               <h3>Total Amount</h3>
               <p className="rupee">₹{amountData.total_amount}</p>
+            </div>
+
+            <div className="amount-box">
+              <h3>Paid Amount</h3>
+              <p className="rupee">₹{amountData.paid_amount}</p>
+            </div>
+
+            <div className="amount-box">
+              <h3>Due Amount</h3>
+              <p className="rupee">₹{amountData.due_amount}</p>
             </div>
           </div>
         </div>
@@ -202,7 +304,5 @@ const PaymentPage = () => {
     </>
   );
 };
- 
+
 export default PaymentPage;
- 
- 

@@ -9,57 +9,82 @@ import StudentTaskLog from "./components/StudentTaskLog";
 import Settings from "./components/settings";
 import Payment from "./components/Payment";
 import ChatPage from "./components/chat";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* 🔓 NO SIDEBAR */}
+        {/* 🔓 PUBLIC */}
         <Route path="/" element={<Login />} />
 
-        {/* 🔐 SIDEBAR PAGES */}
+        {/* 🔐 PROTECTED */}
         <Route
           path="/student-dashboard"
-          element={<Layout><StudentDashboard /></Layout>}
+          element={
+            <ProtectedRoute>
+              <Layout><StudentDashboard /></Layout>
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/course"
-          element={<Layout><Course /></Layout>}
+          element={
+            <ProtectedRoute>
+              <Layout><Course /></Layout>
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/attendancedashboard"
-          element={<Layout><AttendanceDashboard /></Layout>}
-        />
-
-        <Route
-          path="/change-password"
-          element={<ChangePassword />}
+          element={
+            <ProtectedRoute>
+              <Layout><AttendanceDashboard /></Layout>
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/student/task-log"
-          element={<Layout><StudentTaskLog /></Layout>}
+          element={
+            <ProtectedRoute>
+              <Layout><StudentTaskLog /></Layout>
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/settings"
-          element={<Layout><Settings /></Layout>}
+          element={
+            <ProtectedRoute>
+              <Layout><Settings /></Layout>
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/payment"
-          element={<Layout><Payment /></Layout>}
+          element={
+            <ProtectedRoute>
+              <Layout><Payment /></Layout>
+            </ProtectedRoute>
+          }
         />
 
-         <Route
+        <Route
           path="/chat"
-          element={<Layout>
-            <ChatPage/>
-          </Layout>}
+          element={
+            <ProtectedRoute>
+              <Layout><ChatPage /></Layout>
+            </ProtectedRoute>
+          }
         />
+
+        {/* optional */}
+        <Route path="/change-password" element={<ChangePassword />} />
 
       </Routes>
     </BrowserRouter>
