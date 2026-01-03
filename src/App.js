@@ -84,6 +84,9 @@ function App() {
           }
         />
 
+        {/* optional */}
+        <Route path="/change-password" element={<ChangePassword />} />
+
       </Routes>
     </BrowserRouter>
   );
