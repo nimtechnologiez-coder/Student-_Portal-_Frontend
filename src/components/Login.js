@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../style/Login.css";
 import { useNavigate } from "react-router-dom";
 import login from "../Images/login.png";
+import API_BASE_URL from "../config/api";   // ✅ ONLY THIS
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/student/login/",
+        `${API_BASE_URL}/api/student/login/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -58,15 +59,9 @@ const Login = () => {
         localStorage.setItem("valid_upto", result.valid_upto);
 
         setShowModal(true);
-      }
-
-      
-      else if (result.status === "expired") {
+      } else if (result.status === "expired") {
         setErrors(result.message);
-      }
-
-      
-      else {
+      } else {
         setErrors(result.message || "Invalid credentials");
       }
     } catch (error) {
@@ -78,7 +73,6 @@ const Login = () => {
   return (
     <div className="page-bg">
       <div className="main-card">
-
         {/* LEFT */}
         <div className="left-section">
           <h2>Login</h2>
@@ -93,7 +87,6 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email or username"
             />
 
             <label>Password</label>
@@ -102,12 +95,7 @@ const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
             />
-
-            <a href="/change-password" className="forgot">
-              Forgot Password?
-            </a>
 
             <button className="login-btn" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
@@ -117,32 +105,19 @@ const Login = () => {
 
         {/* RIGHT */}
         <div className="right-section">
-          <div className="blur-circle circle1"></div>
-          <div className="blur-circle circle2"></div>
-
           <h1>
             Welcome to <br />
             <span>student portal</span>
           </h1>
-
-          <p className="access">Login to access your account</p>
-
-          <img src={login} alt="illustration" className="illustration" />
+          <img src={login} alt="illustration" />
         </div>
-
       </div>
 
-      {/* SUCCESS MODAL */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             <h3>Login Successful 🎉</h3>
-            <p>Welcome to Student Portal</p>
-
-            <button
-              className="modal-btn"
-              onClick={() => navigate("/student-dashboard")}
-            >
+            <button onClick={() => navigate("/student-dashboard")}>
               Go to Dashboard →
             </button>
           </div>

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import "../style/Payment.css";
 import qrImage from "../Images/qr-code.png";
 import coursepic from "../Images/hero1top 1.png";
+/* ================= TOP BAR ================= *
+import API_BASE_URL from "../config/api";
 
-/* ================= TOP BAR ================= */
+ 
+/* ---------------- TOP BAR ---------------- main
 const TopBar = ({ fullName, email, course }) => {
   return (
     <div className="settingsa-container">
@@ -245,6 +248,33 @@ const PaymentPage = () => {
     fetch(
       `http://localhost:8000/api/payment-amount/?user_id=${userId}`
     )
+ 
+  // Mock user data (later connect API)
+  const userId = localStorage.getItem("user_id");
+  const [userData, setUserData] = useState({
+    fullName: "",
+    email: "",
+    course: "",
+  });
+  useEffect(() => {
+    if (!userId) return;        
+    fetch(`${API_BASE_URL}/api/student/profile/?user_id=${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setUserData({
+            fullName: data.profile.name,
+            email: data.profile.email,
+            course: data.profile.course_name,
+          });
+        }       
+      })  
+      .catch(() => console.error("Profile fetch error"));
+  }, [userId]);
+
+ 
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/student/payment-amount/?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {

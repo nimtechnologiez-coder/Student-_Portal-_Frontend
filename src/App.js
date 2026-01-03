@@ -18,6 +18,7 @@ function App() {
 
         {/* 🔓 PUBLIC */}
         <Route path="/" element={<Login />} />
+        <Route path="/change-password" element={<ChangePassword />} />
 
         {/* 🔐 PROTECTED */}
         <Route

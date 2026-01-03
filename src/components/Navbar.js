@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 
 import "../style/Navbar.css";
+import API_BASE_URL from "../config/api";
+
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -29,20 +31,21 @@ const Sidebar = () => {
   // FETCH PROFILE (ONE API)
   // ==========================
   useEffect(() => {
-    if (!userId) return;
+  if (!userId) return;
 
-    fetch(`http://127.0.0.1:8000/api/student/profile/?user_id=${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setProfile({
-            name: data.profile.name,
-            profile_photo: data.profile.profile_photo,
-          });
-        }
-      })
-      .catch((err) => console.error("Profile API error:", err));
-  }, [userId]);
+  fetch(`${API_BASE_URL}/api/student/profile/?user_id=${userId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status === "success") {
+        setProfile({
+          name: data.profile.name,
+          profile_photo: data.profile.profile_photo,
+        });
+      }
+    })
+    .catch((err) => console.error("Profile API error:", err));
+}, [userId]);
+
 
   // ==========================
   // BODY CLASS FIX

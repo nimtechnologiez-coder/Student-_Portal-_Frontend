@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "../style/AttendanceDashboard.css";
+import API_BASE_URL from "../config/api";
+
 
 export default function Attendance() {
   const userId = localStorage.getItem("user_id");
@@ -15,8 +17,8 @@ export default function Attendance() {
     }
 
     fetch(
-      `http://127.0.0.1:8000/api/student/attendance-dashboard/?user_id=${userId}`
-    )
+      `${API_BASE_URL}/api/student/attendance-dashboard/?user_id=${userId}`
+      )
       .then((res) => res.json())
       .then((json) => {
         if (json.status === "success") {
