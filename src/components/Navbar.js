@@ -15,6 +15,8 @@ import {
 import "../style/Navbar.css";
 import API_BASE_URL from "../config/api";
 
+// ✅ DEFAULT AVATAR (SAFE FALLBACK)
+const DEFAULT_AVATAR = "https://i.imgur.com/QCNbOAo.png";
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -23,46 +25,56 @@ const Sidebar = () => {
   const userId = localStorage.getItem("user_id");
 
   const [profile, setProfile] = useState({
-    name: "",
-    profile_photo: "",
+    name: "Student",
+    profile_photo: null,
   });
 
-  // ==========================
-  // FETCH PROFILE (ONE API)
-  // ==========================
+  // ==================================================
+  // FETCH STUDENT PROFILE
+  // ==================================================
   useEffect(() => {
-  if (!userId) return;
+    if (!userId) return;
 
-  fetch(`${API_BASE_URL}/api/student/profile/?user_id=${userId}`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.status === "success") {
+    fetch(`${API_BASE_URL}/api/student/profile/?user_id=${userId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Profile fetch failed");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.status === "success") {
+          setProfile({
+            name: data.profile.name || "Student",
+            profile_photo: data.profile.profile_photo || null,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Profile API error:", err);
         setProfile({
-          name: data.profile.name,
-          profile_photo: data.profile.profile_photo,
+          name: "Student",
+          profile_photo: null,
         });
-      }
-    })
-    .catch((err) => console.error("Profile API error:", err));
-}, [userId]);
+      });
+  }, [userId]);
 
-
-  // ==========================
-  // BODY CLASS FIX
-  // ==========================
+  // ==================================================
+  // BODY SCROLL FIX FOR MOBILE
+  // ==================================================
   useEffect(() => {
     if (open) {
       document.body.classList.add("sidebar-opened");
     } else {
       document.body.classList.remove("sidebar-opened");
     }
+
+    return () => document.body.classList.remove("sidebar-opened");
   }, [open]);
 
   const handleClose = () => setOpen(false);
 
   return (
     <>
-      {/* HAMBURGER */}
+      {/* HAMBURGER BUTTON */}
       <button className="hamburger-btn" onClick={() => setOpen(true)}>
         <Menu size={26} />
       </button>
@@ -78,21 +90,25 @@ const Sidebar = () => {
 
         <h2 className="sidebar-title">Student Dashboard</h2>
 
-        {/* USER PROFILE */}
+        {/* ================= USER PROFILE ================= */}
         <div className="user-profile">
           <img
-            src={profile.profile_photo || "https://i.imgur.com/QCNbOAo.png"}
+            src={profile.profile_photo || DEFAULT_AVATAR}
             alt="Student"
             className="profile-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = DEFAULT_AVATAR;
+            }}
           />
           <div>
             <span className="welcome-text">Welcome</span>
             <br />
-            <span className="user-name">{profile.name || "Student"}</span>
+            <span className="user-name">{profile.name}</span>
           </div>
         </div>
 
-        {/* NAVIGATION */}
+        {/* ================= NAVIGATION ================= */}
         <nav className="nav-menu">
           <Link
             to="/student-dashboard"
@@ -135,13 +151,13 @@ const Sidebar = () => {
           <Link
             to="/payment"
             onClick={handleClose}
-            className={`nav-item ${pathname === "/payments" ? "active" : ""}`}
+            className={`nav-item ${pathname === "/payment" ? "active" : ""}`}
           >
             <CreditCard size={20} /> Payments
           </Link>
         </nav>
 
-        {/* FOOTER */}
+        {/* ================= FOOTER ================= */}
         <div className="sidebar-footer">
           <Link to="/chat" onClick={handleClose} className="footer-item">
             <MessageSquare size={20} /> Chat
