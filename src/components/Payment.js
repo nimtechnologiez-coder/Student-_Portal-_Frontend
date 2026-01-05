@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../style/Payment.css";
 import qrImage from "../Images/qr-code.png";
 import coursepic from "../Images/hero1top 1.png";
-/* ================= TOP BAR ================= *
 import API_BASE_URL from "../config/api";
 
- 
-/* ---------------- TOP BAR ---------------- main
+/* ================= TOP BAR ================= */
 const TopBar = ({ fullName, email, course }) => {
   return (
     <div className="settingsa-container">
@@ -48,16 +46,10 @@ const TopBar = ({ fullName, email, course }) => {
 };
 
 /* ================= PAYMENT FORM ================= */
-const PaymentForm = ({
-  fullName,
-  dueAmount,
-  refreshAmounts,
-  paymentInfo,
-}) => {
+const PaymentForm = ({ fullName, dueAmount, refreshAmounts, paymentInfo }) => {
+  const userId = localStorage.getItem("user_id");
   const [showQR, setShowQR] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const userId = localStorage.getItem("user_id");
 
   const [formData, setFormData] = useState({
     userAmount: "",
@@ -75,7 +67,7 @@ const PaymentForm = ({
 
   const submitPayment = async () => {
     if (!formData.userAmount || !formData.utr || !formData.screenshot) {
-      alert("All fields required");
+      alert("All fields are required");
       return;
     }
 
@@ -93,17 +85,16 @@ const PaymentForm = ({
     setLoading(true);
 
     try {
-      const res = await fetch(
-        "http://localhost:8000/api/submit-payment/",
-        {
-          method: "POST",
-          body: data,
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/submit-payment/`, {
+        method: "POST",
+        body: data,
+      });
+
+      if (!res.ok) throw new Error("Payment submission failed");
 
       const json = await res.json();
 
-      if (res.ok && json.status === "success") {
+      if (json.status === "success") {
         alert("Payment proof submitted");
         setFormData({ userAmount: "", utr: "", screenshot: null });
         refreshAmounts();
@@ -111,8 +102,9 @@ const PaymentForm = ({
       } else {
         alert(json.message || "Payment failed");
       }
-    } catch {
-      alert("Server error");
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Try again later.");
     } finally {
       setLoading(false);
     }
@@ -144,31 +136,22 @@ const PaymentForm = ({
           <p>IFSC: SBIN0001234</p>
         </div>
 
-        <div className="wallets">Paytm &nbsp; GPay &nbsp; PhonePe</div>
+        <div className="wallets">Paytm · GPay · PhonePe</div>
 
         <button className="scan-btn" onClick={() => setShowQR(true)}>
           Scan QR
         </button>
 
         <label>UTR / Transaction ID</label>
-        <input
-          name="utr"
-          value={formData.utr}
-          onChange={handleChange}
-        />
+        <input name="utr" value={formData.utr} onChange={handleChange} />
 
         <label>Payment Screenshot</label>
         <input type="file" name="screenshot" onChange={handleChange} />
 
-        <button
-          className="submit-btn"
-          onClick={submitPayment}
-          disabled={loading}
-        >
+        <button className="submit-btn" onClick={submitPayment} disabled={loading}>
           {loading ? "Submitting..." : "Submit Payment Proof"}
         </button>
 
-        {/* ================= STATUS + REASON ================= */}
         <div className="status-box">
           Status:{" "}
           <b>
@@ -177,18 +160,11 @@ const PaymentForm = ({
             {paymentInfo.status === "rejected" && "Rejected ❌"}
           </b>
 
-          {paymentInfo.status === "rejected" &&
-            paymentInfo.remark && (
-              <div
-                style={{
-                  marginTop: "6px",
-                  color: "#f44336",
-                  fontSize: "14px",
-                }}
-              >
-                Reason: {paymentInfo.remark}
-              </div>
-            )}
+          {paymentInfo.status === "rejected" && paymentInfo.remark && (
+            <div style={{ marginTop: "6px", color: "#f44336" }}>
+              Reason: {paymentInfo.remark}
+            </div>
+          )}
         </div>
       </div>
 
@@ -226,12 +202,14 @@ const PaymentPage = () => {
     remark: "",
   });
 
-  /* 🔹 FETCH PROFILE */
   useEffect(() => {
-    fetch(
-      `http://localhost:8000/api/student/profile/?user_id=${userId}`
-    )
-      .then((res) => res.json())
+    if (!userId) return;
+
+    fetch(`${API_BASE_URL}/api/student/profile/?user_id=${userId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Profile fetch failed");
+        return res.json();
+      })
       .then((data) => {
         if (data.status === "success") {
           setUserData({
@@ -240,42 +218,18 @@ const PaymentPage = () => {
             course: data.profile.course,
           });
         }
-      });
+      })
+      .catch((err) => console.error(err));
   }, [userId]);
 
-  /* 🔹 FETCH PAYMENT DATA */
   const fetchAmounts = () => {
-    fetch(
-      `http://localhost:8000/api/payment-amount/?user_id=${userId}`
-    )
- 
-  // Mock user data (later connect API)
-  const userId = localStorage.getItem("user_id");
-  const [userData, setUserData] = useState({
-    fullName: "",
-    email: "",
-    course: "",
-  });
-  useEffect(() => {
-    if (!userId) return;        
-    fetch(`${API_BASE_URL}/api/student/profile/?user_id=${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setUserData({
-            fullName: data.profile.name,
-            email: data.profile.email,
-            course: data.profile.course_name,
-          });
-        }       
-      })  
-      .catch(() => console.error("Profile fetch error"));
-  }, [userId]);
+    if (!userId) return;
 
- 
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/api/student/payment-amount/?user_id=${userId}`)
-      .then((res) => res.json())
+    fetch(`${API_BASE_URL}/api/payment-amount/?user_id=${userId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Payment fetch failed");
+        return res.json();
+      })
       .then((data) => {
         if (data.status === "success") {
           setAmountData({
@@ -289,7 +243,8 @@ const PaymentPage = () => {
             remark: data.admin_remark,
           });
         }
-      });
+      })
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => {
