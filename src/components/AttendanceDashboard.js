@@ -43,10 +43,22 @@ export default function Attendance() {
     (percentages.successful_attendance / 100) * 360
   );
 
-  // ================= CALENDAR =================
+  // ================= CALENDAR (FIXED | SAME UI) =================
   const today = new Date();
-  const monthName = today.toLocaleString("default", { month: "long" });
+  const year = today.getFullYear();
+  const month = today.getMonth(); // 0-based
   const activeDay = today.getDate();
+
+  const monthName = today.toLocaleString("default", { month: "long" });
+
+  // First day of month (0=Sun)
+  const firstDay = new Date(year, month, 1).getDay();
+
+  // Convert to Monday-first
+  const startDay = firstDay === 0 ? 6 : firstDay - 1;
+
+  // Total days in month
+  const totalDays = new Date(year, month + 1, 0).getDate();
 
   return (
     <div className="layout">
@@ -173,7 +185,7 @@ export default function Attendance() {
             </div>
           </div>
 
-          {/* CALENDAR */}
+          {/* CALENDAR (SAME UI, FIXED LOGIC) */}
           <div className="calendar-card">
             <h4 className="calendar-title">{monthName}</h4>
 
@@ -188,7 +200,13 @@ export default function Attendance() {
             </div>
 
             <div className="calendar-dates">
-              {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+              {/* Empty slots */}
+              {Array.from({ length: startDay }).map((_, i) => (
+                <span key={`e-${i}`} className="empty"></span>
+              ))}
+
+              {/* Days */}
+              {Array.from({ length: totalDays }, (_, i) => i + 1).map((day) => (
                 <span
                   key={day}
                   className={day === activeDay ? "active-day" : ""}

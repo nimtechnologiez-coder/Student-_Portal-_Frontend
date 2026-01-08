@@ -45,14 +45,10 @@ const TopBar = ({ fullName, email, course }) => {
 };
 
 /* ================= PAYMENT FORM ================= */
-const PaymentForm = ({
-  fullName,
-  dueAmount,
-  refreshAmounts,
-  paymentInfo,
-}) => {
+const PaymentForm = ({ fullName, dueAmount, refreshAmounts, paymentInfo }) => {
   const [showQR, setShowQR] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const userId = localStorage.getItem("user_id");
 
@@ -71,15 +67,8 @@ const PaymentForm = ({
   };
 
   const submitPayment = async () => {
-    if (!formData.userAmount || !formData.utr || !formData.screenshot) {
-      alert("All fields required");
-      return;
-    }
-
-    if (Number(formData.userAmount) > Number(dueAmount)) {
-      alert("Amount cannot exceed due amount");
-      return;
-    }
+    if (!formData.userAmount || !formData.utr || !formData.screenshot) return;
+    if (Number(formData.userAmount) > Number(dueAmount)) return;
 
     const data = new FormData();
     data.append("user_id", userId);
@@ -90,26 +79,19 @@ const PaymentForm = ({
     setLoading(true);
 
     try {
-      const res = await fetch(
-        "http://localhost:8000/api/submit-payment/",
-        {
-          method: "POST",
-          body: data,
-        }
-      );
+      const res = await fetch("http://localhost:8000/api/submit-payment/", {
+        method: "POST",
+        body: data,
+      });
 
       const json = await res.json();
 
       if (res.ok && json.status === "success") {
-        alert("Payment proof submitted");
+        setShowSuccess(true);
         setFormData({ userAmount: "", utr: "", screenshot: null });
         refreshAmounts();
-        setShowQR(false);
-      } else {
-        alert(json.message || "Payment failed");
+        setTimeout(() => setShowSuccess(false), 3000);
       }
-    } catch {
-      alert("Server error");
     } finally {
       setLoading(false);
     }
@@ -133,20 +115,6 @@ const PaymentForm = ({
           onChange={handleChange}
         />
 
-        <div className="bank-details">
-          <strong>ABC Training Institute</strong>
-          <p>UPI: abctraining@upi</p>
-          <p>Account: 123456789012</p>
-          <p>Bank: State Bank of India</p>
-          <p>IFSC: SBIN0001234</p>
-        </div>
-
-        <div className="wallets">Paytm &nbsp; GPay &nbsp; PhonePe</div>
-
-        <button className="scan-btn" onClick={() => setShowQR(true)}>
-          Scan QR
-        </button>
-
         <label>UTR / Transaction ID</label>
         <input
           name="utr"
@@ -165,7 +133,6 @@ const PaymentForm = ({
           {loading ? "Submitting..." : "Submit Payment Proof"}
         </button>
 
-        {/* ================= STATUS + REASON ================= */}
         <div className="status-box">
           Status:{" "}
           <b>
@@ -174,21 +141,26 @@ const PaymentForm = ({
             {paymentInfo.status === "rejected" && "Rejected ❌"}
           </b>
 
-          {paymentInfo.status === "rejected" &&
-            paymentInfo.remark && (
-              <div
-                style={{
-                  marginTop: "6px",
-                  color: "#f44336",
-                  fontSize: "14px",
-                }}
-              >
-                Reason: {paymentInfo.remark}
-              </div>
-            )}
+          {paymentInfo.status === "rejected" && paymentInfo.remark && (
+            <div style={{ marginTop: "6px", color: "#f44336" }}>
+              Reason: {paymentInfo.remark}
+            </div>
+          )}
         </div>
       </div>
 
+      {/* SUCCESS POPUP */}
+      {showSuccess && (
+        <div className="payment-success-overlay">
+          <div className="payment-success-modal">
+            <h2>Payment Proof Submitted ✅</h2>
+            <p>Please wait for admin verification.</p>
+            <button onClick={() => setShowSuccess(false)}>OK</button>
+          </div>
+        </div>
+      )}
+
+      {/* QR POPUP */}
       {showQR && (
         <div className="qr-overlay" onClick={() => setShowQR(false)}>
           <div className="qr-box" onClick={(e) => e.stopPropagation()}>
@@ -223,11 +195,8 @@ const PaymentPage = () => {
     remark: "",
   });
 
-  /* 🔹 FETCH PROFILE */
   useEffect(() => {
-    fetch(
-      `http://localhost:8000/api/student/profile/?user_id=${userId}`
-    )
+    fetch(`http://localhost:8000/api/student/profile/?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -240,20 +209,12 @@ const PaymentPage = () => {
       });
   }, [userId]);
 
-  /* 🔹 FETCH PAYMENT DATA */
   const fetchAmounts = () => {
-    fetch(
-      `http://localhost:8000/api/payment-amount/?user_id=${userId}`
-    )
+    fetch(`http://localhost:8000/api/payment-amount/?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
-          setAmountData({
-            total_amount: data.total_amount,
-            paid_amount: data.paid_amount,
-            due_amount: data.due_amount,
-          });
-
+          setAmountData(data);
           setPaymentInfo({
             status: data.payment_status,
             remark: data.admin_remark,
@@ -271,9 +232,8 @@ const PaymentPage = () => {
       <TopBar {...userData} />
 
       <div className="payment-wrapper">
-        <h1 className="payment-title">Payment</h1>
-
         <div className="payment-container">
+          {/* LEFT */}
           <div className="left-side">
             <PaymentForm
               fullName={userData.fullName}
@@ -283,6 +243,7 @@ const PaymentPage = () => {
             />
           </div>
 
+          {/* RIGHT */}
           <div className="right-side">
             <div className="amount-box">
               <h3>Total Amount</h3>
@@ -298,6 +259,43 @@ const PaymentPage = () => {
               <h3>Due Amount</h3>
               <p className="rupee">₹{amountData.due_amount}</p>
             </div>
+
+            {/* BANK DETAILS RIGHT SIDE */}
+        <div className="bank-box">
+  <h3>Bank Details</h3>
+
+  <p>
+    <b>Institute:</b> Nim TECHNOLOGIES
+  </p>
+
+  <p>
+    <b>Account:</b> 272702000000336
+  </p>
+
+  <p>
+    <b>Bank:</b> Indian Overseas Bank
+  </p>
+
+  <p>
+    <b>IFSC:</b> IOBA0002727
+  </p>
+
+  {/* WALLET ICONS */}
+  <div className="wallet-icons">
+    <span className="wallet-item gpay">
+      <i className="bi bi-google"></i> GPay
+    </span>
+
+    <span className="wallet-item phonepe">
+      <i className="bi bi-phone"></i> PhonePe
+    </span>
+
+    <span className="wallet-item paytm">
+      <i className="bi bi-wallet2"></i> Paytm
+    </span>
+  </div>
+</div>
+
           </div>
         </div>
       </div>
